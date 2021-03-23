@@ -122,3 +122,38 @@ const addEmployee = () => {
             });
         });
 };
+
+const addRole = () => {
+    inquirer
+        .prompt([
+            {
+                name: "newTitle",
+                type: "input",
+                message: "What's the title of the new role?"
+            },
+            {
+                name: "newSalary",
+                type: "number",
+                message: "What's the salary of the new role? (To the second decimal place)"
+            },
+            {
+                name: "departmentId",
+                type: "number",
+                message: "What department ID will this role fall under?"
+            }
+
+        ])
+        .then(answer => {
+            connection.query("INSERT INTO role SET ?",
+            {
+                title: answer.newTitle,
+                salary: answer.newSalary,
+                department_id: answer.departmentId
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log("The new role has been added successfully.");
+                app();
+            });
+        });
+};
