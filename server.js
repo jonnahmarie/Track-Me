@@ -84,3 +84,41 @@ const addDepartment = () => {
             });
         });
 };
+
+const addEmployee = () => {
+    inquirer
+        .prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "What's the employee's first name?"
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "What's the employee's last name?"
+            },
+            {
+                name: "roleId",
+                type: "input",
+                message: "What's the employee's role ID?"
+            }
+        ])
+        .then(answer => {
+            connection.query("INSERT INTO employee SET ?",
+            {
+                first_name: answer.firstName,
+                last_name: answer.lastName,
+                role_id: parseInt(answer.roleId)
+            },
+            (err, res) => {
+                if (err) {
+                    console.log("Unable to add new employee. Please add a new role before proceeding.");
+                    addRole();
+                    return;
+                }
+                console.log("Employee has been added.");
+                app();
+            });
+        });
+};
