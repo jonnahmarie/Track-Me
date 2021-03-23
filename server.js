@@ -5,7 +5,7 @@ const table = require("console.table");
 const connection = mysql.createConnection({
     host: "localhost",
     // Port
-    port: 8800,
+    port: 3306,
     // Your username
     user: "root",
     // Your password
@@ -52,4 +52,15 @@ app = () => {
                     break;
             }
         });
-}
+};
+
+const viewEmployees = () => {
+    connection.query( `SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee
+    INNER JOIN role on employee.role_id = role.id
+    INNER JOIN department
+    ON role.department_id = department.id`, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        app();
+    });
+};
