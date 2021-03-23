@@ -64,3 +64,23 @@ const viewEmployees = () => {
         app();
     });
 };
+
+const addDepartment = () => {
+    inquirer
+        .prompt({
+            name: "department",
+            type: "input",
+            message: "Add a new department"
+        })
+        .then(answer => {
+            connection.query("INSERT INTO department SET ?",
+            {
+                name: answer.department
+            },
+            (err, res) => {
+                if (err) throw err;
+                console.log("Department added successfully.");
+                app();
+            });
+        });
+};
