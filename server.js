@@ -54,11 +54,12 @@ app = () => {
         });
 };
 
+const employeeQuery = `SELECT employee.first_name, employee.last_name, role.title, role.salary, department.dept_name FROM employee
+INNER JOIN role ON employee.role_id = role.id
+INNER JOIN department ON role.department_id = department.id`;
+
 const viewEmployees = () => {
-    connection.query( `SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee
-    INNER JOIN role on employee.role_id = role.id
-    INNER JOIN department
-    ON role.department_id = department.id`, (err, res) => {
+    connection.query(employeeQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
         app();
@@ -68,14 +69,14 @@ const viewEmployees = () => {
 const addDepartment = () => {
     inquirer
         .prompt({
-            name: "department",
+            name: "newDepartment",
             type: "input",
             message: "Add a new department"
         })
         .then(answer => {
             connection.query("INSERT INTO department SET ?",
             {
-                name: answer.department
+                dept_name: answer.newDepartment
             },
             (err, res) => {
                 if (err) throw err;
@@ -156,4 +157,49 @@ const addRole = () => {
                 app();
             });
         });
+};
+
+const updateRole = () => {
+    connection.query("SELECT employee.id FROM employee", (err, res) => {
+        const selectEmployee = res.map(employee => employee.id);
+        // console.table(res);
+
+        inquirer
+            .prompt([
+                {
+                    name: "updateEmployee",
+                    type: "rawlist",
+                    // message: "Which employee would you like to update?",
+                    message: "What is the ID of the employee you would like to update?",
+                    choices: selectEmployee
+                }
+            ])
+            .then(answer => {
+                // console.log(`You would like to update ${answer.updateEmployee}.`);
+
+                connection.query("SELECT role.id, role.title FROM role", (err, res) => {
+                    const selectRole = res.map(role => role.id);
+
+                    inquirer
+                    .prompt([
+                        {
+                            name: "updateTo",
+                            type: "rawlist",
+                            message: `What is the ID of the new role you would like to assign the employee to?`,
+                            choices: selectRole
+                        }
+                    ])
+                    .then(response => {
+                        // console.log(`You would like to update ${answer.updateEmployee} to the role of ${response.updateTo}`);
+
+                        connection.query(`UPDATE employee SET role_id = ${response.updateTo} WHERE id = ${answer.updateEmployee}`,
+                        (err, res) => {
+                            if (err) throw err;
+                            console.log(`The employee's role has been successfully changed.`);
+                            app();
+                        })
+                    })
+                })
+            });
+    });
 };
