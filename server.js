@@ -54,7 +54,7 @@ app = () => {
         });
 };
 
-const employeeQuery = `SELECT employee.first_name, employee.last_name, role.title, role.salary, department.dept_name FROM employee
+const employeeQuery = `SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.dept_name FROM employee
 INNER JOIN role ON employee.role_id = role.id
 INNER JOIN department ON role.department_id = department.id`;
 
@@ -197,8 +197,8 @@ const updateRole = () => {
                             if (err) throw err;
                             console.log(`The employee's role has been successfully changed.`);
                             app();
-                        })
-                    })
+                        });
+                    });
                 })
             });
     });
