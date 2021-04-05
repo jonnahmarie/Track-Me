@@ -6,7 +6,7 @@ This is a Node-based application uses MySQL database and Inquirer NPM package to
 ## Installation
 The user requires the installation of the Inquirer package (npm install inquirer) and MySQL Workbench in order to access the necessary database.
 
-- Run 'npm init' if package.json isn't in the file structure, otherwise fun 'npm install' to install dependencies.
+- Run 'npm init' if package.json isn't in the file structure, otherwise run 'npm install' to install dependencies.
 - Run the schema.sql and seed.sql scripts into MySQL Workbench
 
 ## Usage
